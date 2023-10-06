@@ -1,0 +1,110 @@
+---
+title: "compte_rendu_tp1_mongo"
+author: "theo guesdon"
+date: "2023-10-06"
+output: pdf_document
+header-includes:
+  -\usepackage{color}
+---
+\section{TP de mongodb}
+
+\subsection{proposition 1}
+\paragraph{question}
+afficher les titre et la courte description si elle existe(mais pas obligatoire) des different livres 
+qui on été punlier apres 2008 et qui sont toujours considéré comme publier et dont le sujet( categorie) parle d'Internet
+\paragraph{resolution}
+db.book.find({
+  $and: [
+    { publishedDate: { $gt: ISODate("2008-12-31T23:59:59.999Z") } },
+    { status: "PUBLISH" }
+  ]
+}, {
+  _id: 0,
+  title: 1,
+  shortDescription: 1
+})
+\paragraph{resultat}
+[                                                                                                                     { title: 'Flex 3 in Action' },                                                                                        
+
+{ title: 'Flex 4 in Action' },                                                                                        
+
+{  title: 'Flex on Java',                                                                                             shortDescription: '   A beautifully written book that is a must have for every Java Developer.Ashish Kulkarni, Technical Director, E-Business Software Solutions Ltd.' },                                                                                                                                                   ] 
+\subsection{proposition 2}
+\paragraph{question}
+liste le titre et les autheurs aggrégé regroupper par categories de lire et trier par date de parution
+\paragraph{resolution}
+db.books.aggregate([
+  {
+    $match: {
+      status: "PUBLISH",
+      publishedDate: { $gt: ISODate("2008-12-31T23:59:59.999Z") }
+    }
+  },
+  {
+    $unwind: "$authors"
+  },
+  {
+    $group: {
+      _id: { category: "$categories", title: "$title" },
+      authors: { $push: "$authors" },
+      publishedDate: { $first: "$publishedDate" }
+    }
+  },
+  {
+    $sort: { "_id.category": 1, publishedDate: 1 }
+  },
+  {
+    $group: {
+      _id: "$_id.category",
+      books: {
+        $push: {
+          title:"$_id.title",
+          authors: { $reduce: { input: "$authors", initialValue: "", in: { $concat: ["$$value", "$$this"] } }
+        }
+      }
+    }
+  }
+  }
+])
+
+\paragraph{resultat}
+ {
+    _id: [ 'Computer Graphics' ],
+    books: [ { title: 'Gnuplot in Action', authors: 'Philipp K. Janert' } ]
+  },
+  {
+    _id: [ 'Internet' ],
+    books: [
+      {
+        title: 'Flex 3 in Action',
+        authors: 'Tariq Ahmed with Jon HirschiFaisal Abid'
+      },
+      { title: "Website Owner's Manual", authors: 'Paul A. Boag' },
+      { title: 'Hello! Flex 4', authors: 'Peter Armstrong' },
+\subsection{proposition 3}
+\paragraph{question}
+affiche la moyenne du nombre de page des livres avec la categorie "Internet"
+\paragraph{resolution}
+
+db.books.aggregate([
+  {
+    $match: {
+      categories: "Internet",
+      status: "PUBLISH", 
+    }
+  },
+  {
+    $group: {
+      _id: "nombre de pages en moyenne",
+      averagePageCount: { $avg: "$pageCount" }
+    }
+  }
+])
+
+\paragraph{resultat}
+[
+  {
+    _id: 'nombre de pages en moyenne',
+    averagePageCount: 441.2439024390244
+  }
+]
