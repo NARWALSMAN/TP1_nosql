@@ -1,0 +1,256 @@
+TP mongo partie 3 – méthode agregate(), résultat des requêtes
+
+1  Projection (étape $project)
+
+Lister les films francais de 2019, en affichant les nom et prénom du réalisateur concaténés.
+[
+  { title: 'Les Misérables', director_name: 'Ly Ladj' },
+  { title: 'Martin Eden', director_name: 'Marcello Pietro' },
+  { title: 'Alice et le maire', director_name: 'Pariser Nicolas' },
+  { title: 'An Officer and a Spy', director_name: 'Polański Roman' },
+  {
+    title: 'Portrait de la jeune fille en feu',
+    director_name: 'Sciamma Céline'
+  }
+]
+
+1 - Bonus - ajouter 2 champs à la racine des documents : l'année de naissance du realisateur (director_birth_date) et son age (director_age).  Trier les résultats par age du réalisateur.
+
+[
+  {
+    title: 'Alice et le maire',
+    director_birth_date: null,
+    director_age: null,
+    director_name: 'Pariser Nicolas'
+  },
+  {
+    title: 'Portrait de la jeune fille en feu',
+    director_birth_date: 1978,
+    director_age: 45,
+    director_name: 'Sciamma Céline'
+  },
+  {
+    title: 'Les Misérables',
+    director_birth_date: 1978,
+    director_age: 45,
+    director_name: 'Ly Ladj'
+  },
+  {
+    title: 'Martin Eden',
+    director_birth_date: 1976,
+    director_age: 47,
+    director_name: 'Marcello Pietro'
+  },
+  {
+    title: 'An Officer and a Spy',
+    director_birth_date: 1933,
+    director_age: 90,
+    director_name: 'Polański Roman'
+  }
+]
+
+2) Calcul d’un nombre d'items - count(*) en SQL
+
+Nombre de films réalisés par peter jackson
+[ { nb_films_jackson: 3 } ]
+
+3) Equivalent du distinct et count distinct en SQL
+
+3 - a 
+Nombre de réalisateurs différents dans la base film
+[ { nb_realisateurs: 133 } ]
+
+3 - b 
+Afficher pour chaque réalisateur ses noms et prénoms concaténés, et son année de naissance
+
+Un échantillon des données : (en vrai il y a 133 lignes)
+[
+...
+{ director: 'Weir, Peter', birth_date: 1944 },
+{ director: 'Welles, Orson', birth_date: 1915 },
+{ director: 'Wilder, Billy', birth_date: 1906 },
+{ director: 'Wiseman, Len', birth_date: 1973 },
+{ director: 'Woo, John', birth_date: 1946 },
+{ director: 'Wyler, William', birth_date: 1902 },
+{ director: 'Zvyagintsev, Andrey', birth_date: 1964 },
+{ director: 'de Broca, Philippe', birth_date: 1933 },
+{ director: 'de Peretti, Thierry', birth_date: null },
+{ director: 'von Trier, Lars', birth_date: 1956 }
+
+4)  ex d'équivalent au 'group by' SQL
+
+4 - a  Compter le nombre de films par genre.
+Afficher le genre, le nombre de film pour ce genre, et trier les résultats par odre décroissant de nombre de film.
+[
+  { genre: 'Drame', nb_film: 96 },
+  { genre: 'Action', nb_film: 36 },
+  { genre: 'Crime', nb_film: 29 },
+  { genre: 'Comédie', nb_film: 25 },
+  { genre: 'Aventure', nb_film: 22 },
+  { genre: 'Drama', nb_film: 14 },
+  { genre: 'Thriller', nb_film: 10 },
+  { genre: 'Science-Fiction', nb_film: 9 },
+  { genre: 'Horreur', nb_film: 8 },
+  { genre: 'Mystère', nb_film: 6 },
+  { genre: 'Fantastique', nb_film: 4 },
+  { genre: 'Western', nb_film: 3 },
+  { genre: 'Adventure', nb_film: 3 },
+  { genre: 'Romance', nb_film: 3 },
+  { genre: 'Musique', nb_film: 2 },
+  { genre: 'Fantasy', nb_film: 2 },
+  { genre: 'Mystery', nb_film: 1 },
+  { genre: 'Comedy', nb_film: 1 },
+  { genre: 'Science Fiction', nb_film: 1 },
+  { genre: 'Histoire', nb_film: 1 },
+  { genre: 'War', nb_film: 1 },
+  { genre: 'Guerre', nb_film: 1 }
+]
+
+4 - b
+Afficher le pays, puis le nombre de genre représentés.
+[
+  { pays: 'US', nb_genre: 17 },
+  { pays: 'FR', nb_genre: 11 },
+  { pays: 'GB', nb_genre: 10 },
+  { pays: 'IT', nb_genre: 5 },
+  { pays: 'CA', nb_genre: 4 },
+  { pays: 'JP', nb_genre: 3 },
+  { pays: 'AU', nb_genre: 3 },
+  { pays: 'SE', nb_genre: 3 },
+  { pays: 'CN', nb_genre: 2 },
+  { pays: 'BE', nb_genre: 2 },
+  { pays: 'NL', nb_genre: 1 },
+  { pays: 'HK', nb_genre: 1 },
+  { pays: 'ES', nb_genre: 1 },
+  { pays: 'DK', nb_genre: 1 },
+  { pays: 'KR', nb_genre: 1 },
+  { pays: 'CZ', nb_genre: 1 },
+  { pays: 'NO', nb_genre: 1 },
+  { pays: 'NZ', nb_genre: 1 },
+  { pays: 'RU', nb_genre: 1 },
+  { pays: 'IE', nb_genre: 1 },
+  { pays: 'DE', nb_genre: 1 }
+]
+
+4 - c 
+Afficher le nombre de film, et les nom-prenom concaténés des réalisateur qui ont réalisé 5 films ou plus . Trier par ordre croissant de nombre de films
+[
+  { nb_film: 5, director: 'George Lucas' },
+  { nb_film: 5, director: 'Ingmar Bergman' },
+  { nb_film: 5, director: 'Michael Mann' },
+  { nb_film: 5, director: 'Paul Verhoeven' },
+  { nb_film: 6, director: 'Ridley Scott' },
+  { nb_film: 6, director: 'Francis Ford Coppola' },
+  { nb_film: 7, director: 'Stanley Kubrick' },
+  { nb_film: 7, director: 'Quentin Tarantino' },
+  { nb_film: 7, director: 'Roman Polański' },
+  { nb_film: 7, director: 'Christopher Nolan' },
+  { nb_film: 8, director: 'Woody Allen' },
+  { nb_film: 10, director: 'Alfred Hitchcock' },
+  { nb_film: 13, director: 'Steven Spielberg' }
+]
+
+4 - d 
+Moyenne du nombre de films réalisé par realisateur : 
+[ { _id: {}, moyenne_nb_film: 2.0902255639097747 } ]
+
+5) Utilisation du tri dans le pipeline 
+
+5 - a  Quel est le dernier film en date réalisé par Spielberg ?
+
+[ { _id: 'movie:74', title: 'La Guerre des Mondes', year: 2005 } ]
+
+5 - b On veut maintenant savoir quel est le dernier film réalisé pour chaque réalisateur.
+Donner le titre, l'année, et le nom-prenom concaténé du réalisateur
+
+// echantillon des données :
+...
+{
+  _id: { director: 'John Cassavetes' },
+  last_film: 'Gloria',
+  last_year: 1980
+},
+{
+  _id: { director: 'Gilles Lellouche' },
+  last_film: 'Le Grand Bain',
+  last_year: 2018
+},
+{
+  _id: { director: 'Jacques Audiard' },
+  last_film: 'Un prophète',
+  last_year: 2009
+},
+{
+  _id: { director: 'Clint Eastwood' },
+  last_film: 'The Bridges of Madison County',
+  last_year: 1995
+},
+{
+  _id: { director: 'Lars von Trier' },
+  last_film: 'Melancholia',
+  last_year: 2011
+}
+]
+
+6) Manipulation de tableaux d'objets
+
+6 - a 
+Afficher la liste des films dans lesquels a joué l’acteur Viggo Mortensen.
+Afficher le titre, l'année et le réalisateur.
+
+[
+  {
+    title: 'A History of Violence',
+    year: 2005,
+    director: { last_name: 'Cronenberg' }
+  },
+  {
+    title: 'The Lord of the Rings: The Fellowship of the Ring',
+    year: 2001,
+    director: { last_name: 'Jackson' }
+  },
+  {
+    title: 'The Lord of the Rings: The Two Towers',
+    year: 2002,
+    director: { last_name: 'Jackson' }
+  },
+  {
+    title: 'The Lord of the Rings: The Return of the King',
+    year: 2003,
+    director: { last_name: 'Jackson' }
+  },
+  {
+    title: "Les Promesses de l'ombre",
+    year: 2007,
+    director: { last_name: 'Cronenberg' }
+  },
+  {
+    title: 'Green Book : Sur les routes du sud',
+    year: 2018,
+    director: { last_name: 'Farrelly' }
+  }
+]
+
+6 - b  
+ Afficher les acteurs (prenom nom) et le nombre de films dans lesquels ils ont joué.
+On va restreindre l’affichage aux acteurs qui ont joué dans plus de 4 films
+
+[
+  { nb_film: 5, actor: 'Bruce Willis' },
+  { nb_film: 5, actor: 'Brad Pitt' },
+  { nb_film: 5, actor: 'Catherine Deneuve' },
+  { nb_film: 5, actor: 'Michael Caine' },
+  { nb_film: 5, actor: 'Harvey Keitel' },
+  { nb_film: 5, actor: 'Mark Hamill' },
+  { nb_film: 5, actor: 'Diane Keaton' },
+  { nb_film: 5, actor: 'John Rhys-Davies' },
+  { nb_film: 5, actor: 'Vincent Lacoste' },
+  { nb_film: 5, actor: 'John Hurt' },
+  { nb_film: 6, actor: 'Carrie Fisher' },
+  { nb_film: 6, actor: 'Samuel L. Jackson' },
+  { nb_film: 6, actor: 'Viggo Mortensen' },
+  { nb_film: 7, actor: 'Al Pacino' },
+  { nb_film: 7, actor: 'Kirsten Dunst' },
+  { nb_film: 8, actor: 'Robert De Niro' },
+  { nb_film: 13, actor: 'Harrison Ford' }
+]

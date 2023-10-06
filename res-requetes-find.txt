@@ -1,0 +1,89 @@
+TP mongo – méthode find(), résultat des requêtes
+
+­(On choisi ici la plupart du temps de  n’afficher que le titre et l’année des films, pour plus de lisibilité)
+
+R1 Quels sont les films sortis en 1990
+[ { titre: 'Goodfellas', annee: 1990 } ]
+
+R2 Quels sont les films sortis avant 2000
+[  { titre: 'Honkytonk Man', annee: 1982 },
+  { titre: 'Goodfellas', annee: 1990 },
+  { titre: 'The Godfather', annee: 1972 } ]
+
+R3 Quels sont les films sortis soit en 1982 soit en 1990
+[  { titre: 'Goodfellas', annee: 1990 },
+  { titre: 'The Godfather', annee: 1972 } ]
+
+R4 Quels sont les films pour lesquels on ne connaît pas l’année de sortie
+[  { titre: 'Million Dollar Baby' },
+  { titre: 'Unforgiven' },
+  { titre: 'Mystic River', annee: null } ]
+
+R5 Quels sont les films qui ne sont pas sortis en 1990. 
+[  { titre: 'Million Dollar Baby' },
+  { titre: 'Honkytonk Man', annee: 1982 },
+  { titre: 'Unforgiven' },
+  { titre: 'Gran Torino', annee: 2008 },
+  { titre: 'Mystic River', annee: null },
+  { titre: 'The Godfather', annee: 1972 } ]
+
+Quels sont les films dont on est absolument certain qu’ils ne sont pas sortis en 1990 ?
+[  { titre: 'Honkytonk Man', annee: 1982 },
+  { titre: 'Gran Torino', annee: 2008 },
+  { titre: 'The Godfather', annee: 1972 } ]
+
+R6 Quels sont les films réalisés par Martin Scorsese
+[ { titre: 'Goodfellas', annee: 1990 } ]
+
+R7 Quels sont les films réalisés par quelqu’un dont le nom est Eastwood
+[  { titre: 'Million Dollar Baby' },
+  { titre: 'Honkytonk Man', annee: 1982 },
+  { titre: 'Unforgiven' },
+  { titre: 'Gran Torino', annee: 2008 },
+  { titre: 'Mystic River', annee: null } ]
+
+R8 Quels sont les films réalisé par quelqu’un prénommé Clint et réalisés avant 2000 ?
+[ { titre: 'Honkytonk Man', annee: 1982 } ]
+
+R9 Quels sont les films dans lesquels joue Clint Eastwood
+[  { titre: 'Million Dollar Baby' },
+  { titre: 'Unforgiven' },
+  { titre: 'Gran Torino', annee: 2008 } ]
+
+R10 Donnez le détail des films réalisés par Clint Eastwood, dans lesquels il ne joue pas
+[{
+    _id: ObjectId("64e89fa4a79017c0cc5542bb"),
+    titre: 'Honkytonk Man',
+    realisateur: { nom: 'Eastwood', prenom: 'Clint' },
+    annee: 1982,
+    acteurs: [
+      { nom: 'Eastwood', prenom: 'Kyle' },
+      { nom: 'Bloom', prenom: 'Verna' }
+    ]
+  },
+  {
+    _id: ObjectId("64e89fa4a79017c0cc5542bf"),
+    titre: 'Mystic River',
+    realisateur: { nom: 'Eastwood', prenom: 'Clint' },
+    annee: null,
+    acteurs: [
+      { nom: 'Penn', prenom: 'Sean' },
+      { nom: 'Bacon', prenom: 'Kevin' }
+    ]
+  }]
+
+R11 Donner le détail des films pour lesquels le premier acteur cité est prénommé Sean
+[  {
+    _id: ObjectId("64e89fa4a79017c0cc5542bf"),
+    titre: 'Mystic River',
+    realisateur: { nom: 'Eastwood', prenom: 'Clint' },
+    annee: null,
+    acteurs: [
+      { nom: 'Penn', prenom: 'Sean' },
+      { nom: 'Bacon', prenom: 'Kevin' }
+    ]
+  } ]
+
+R12 Trouvez les films qui ont plus de 2 acteurs
+[  { titre: 'Goodfellas', annee: 1990 },
+  { titre: 'The Godfather', annee: 1972 } ]
