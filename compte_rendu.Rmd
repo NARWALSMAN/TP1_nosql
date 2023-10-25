@@ -6,6 +6,7 @@ output: pdf_document
 header-includes:
   -\usepackage{color}
 ---
+\begin{document}
 \section{TP de mongodb}
 
 \subsection{proposition 1}
@@ -108,3 +109,4 @@ db.books.aggregate([
     averagePageCount: 441.2439024390244
   }
 ]
+\end{document}
